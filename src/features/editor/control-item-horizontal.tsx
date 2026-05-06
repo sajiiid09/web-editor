@@ -558,7 +558,7 @@ const ControlItem = ({
 };
 
 export default function ControlItemHorizontal() {
-  const { activeIds, trackItemsMap, transitionsMap } = useStore();
+  const { activeIds, trackItemsMap } = useStore();
   const [trackItem, setTrackItem] = useState<ITrackItem | null>(null);
   const { setTrackItem: setLayoutTrackItem } = useLayoutStore();
   const isLargeScreen = useIsLargeScreen();
@@ -580,7 +580,7 @@ export default function ControlItemHorizontal() {
       if (trackItem) {
         setTrackItem(trackItem);
         setLayoutTrackItem(trackItem);
-      } else console.log(transitionsMap[id]);
+      }
     } else {
       setTrackItem(null);
       setLayoutTrackItem(null);

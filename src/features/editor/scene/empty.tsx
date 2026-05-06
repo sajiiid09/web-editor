@@ -12,7 +12,9 @@ const SceneEmpty = () => {
   const { size } = useStore();
 
   useEffect(() => {
-    const container = containerRef.current!;
+    const container = containerRef.current;
+    if (!container) return;
+
     const PADDING = 96;
     const containerHeight = container.clientHeight - PADDING;
     const containerWidth = container.clientWidth - PADDING;
@@ -29,8 +31,8 @@ const SceneEmpty = () => {
     setIsLoading(false);
   }, [size]);
 
-  const onSelectFiles = (files: File[]) => {
-    console.log({ files });
+  const onSelectFiles = (_files: File[]) => {
+    // Direct drop-to-canvas import is outside the MVP upload flow.
   };
 
   return (

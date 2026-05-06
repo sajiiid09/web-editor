@@ -1,30 +1,42 @@
 import { NextResponse } from "next/server";
 
-const BASE_URL = "https://api.combo.sh/v1";
+const getRenderApiBaseUrl = () =>
+	(process.env.COMBO_API_BASE_URL || "https://api.combo.sh/v1").replace(
+		/\/$/,
+		"",
+	);
+
+const readJsonSafely = async (response: Response) => {
+	try {
+		return await response.json();
+	} catch {
+		return { error: response.statusText };
+	}
+};
 
 export async function POST(request: Request) {
-    try {
-        const body = await request.json();
-        const response = await fetch(`${BASE_URL}/render`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-        });
+	try {
+		const body = await request.json();
+		const response = await fetch(`${getRenderApiBaseUrl()}/render`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(body),
+		});
 
-        if (!response.ok) {
-            const error = await response.json();
-            return NextResponse.json(error, { status: response.status });
-        }
+		const data = await readJsonSafely(response);
 
-        const data = await response.json();
-        return NextResponse.json(data);
-    } catch (error) {
-        console.error("Error initiating render:", error);
-        return NextResponse.json(
-            { error: "Failed to initiate render" },
-            { status: 500 }
-        );
-    }
+		if (!response.ok) {
+			return NextResponse.json(data, { status: response.status });
+		}
+
+		return NextResponse.json(data);
+	} catch (error) {
+		console.error("Error initiating render:", error);
+		return NextResponse.json(
+			{ error: "Failed to initiate render" },
+			{ status: 500 },
+		);
+	}
 }
