@@ -148,14 +148,23 @@ export default function Navbar({
 						</Button>
 					)}
 					{ENABLE_RESIZE && <ResizeVideo />}
-					<DownloadPopover stateManager={stateManager} />
+					<DownloadPopover
+						stateManager={stateManager}
+						projectName={projectName}
+					/>
 				</div>
 			</div>
 		</div>
 	);
 }
 
-const DownloadPopover = ({ stateManager }: { stateManager: StateManager }) => {
+const DownloadPopover = ({
+	stateManager,
+	projectName,
+}: {
+	stateManager: StateManager;
+	projectName: string;
+}) => {
 	const isMediumScreen = useIsMediumScreen();
 	const { actions, exportType } = useDownloadState();
 	const [isExportTypeOpen, setIsExportTypeOpen] = useState(false);
@@ -167,7 +176,7 @@ const DownloadPopover = ({ stateManager }: { stateManager: StateManager }) => {
 			...stateManager.toJSON(),
 		};
 
-		actions.setState({ payload: data });
+		actions.setState({ payload: data, projectName });
 		actions.startExport();
 	};
 
