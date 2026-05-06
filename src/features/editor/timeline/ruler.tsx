@@ -333,8 +333,6 @@ const Ruler = (props: RulerProps) => {
         clickX + scrollLeft - timelineOffsetX - TIMELINE_OFFSET_CANVAS_LEFT;
 
       onClick?.(totalX);
-    } else {
-      console.log("Ruler drag ended - no click action");
     }
   };
 
@@ -353,7 +351,6 @@ const Ruler = (props: RulerProps) => {
 
     // Only handle tap if we haven't dragged at all
     if (!hadDragged) {
-      console.log("Ruler tap - seeking to position");
       const canvas = canvasRef.current;
       if (!canvas) return;
 

@@ -31,6 +31,7 @@ import { useDownloadState } from "./store/use-download-state";
 
 import { LogoIcons } from "@/components/shared/logos";
 import Link from "next/link";
+import { ENABLE_RESIZE, ENABLE_SHARE } from "./config/features";
 
 export default function Navbar({
 	user,
@@ -136,15 +137,17 @@ export default function Navbar({
 							<span className="hidden md:block">Join Us</span>
 						</Button>
 					</Link>
-					<Button
-						className="flex h-7 gap-1 border border-border"
-						variant="outline"
-						size={isMediumScreen ? "sm" : "icon"}
-					>
-						<ShareIcon width={18} />{" "}
-						<span className="hidden md:block">Share</span>
-					</Button>
-
+					{ENABLE_SHARE && (
+						<Button
+							className="flex h-7 gap-1 border border-border"
+							variant="outline"
+							size={isMediumScreen ? "sm" : "icon"}
+						>
+							<ShareIcon width={18} />{" "}
+							<span className="hidden md:block">Share</span>
+						</Button>
+					)}
+					{ENABLE_RESIZE && <ResizeVideo />}
 					<DownloadPopover stateManager={stateManager} />
 				</div>
 			</div>
@@ -163,8 +166,6 @@ const DownloadPopover = ({ stateManager }: { stateManager: StateManager }) => {
 			id: generateId(),
 			...stateManager.toJSON(),
 		};
-
-		console.log({ data });
 
 		actions.setState({ payload: data });
 		actions.startExport();

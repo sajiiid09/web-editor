@@ -13,6 +13,7 @@ import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { MenuItem } from "./menu-item/menu-item";
 import { useIsLargeScreen } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
+import { ENABLE_CAPTIONS } from "./config/features";
 
 // Define menu item data structure
 interface MenuItemData {
@@ -33,11 +34,15 @@ const menuItems: MenuItemData[] = [
     label: "Video",
     icon: Icons.video
   },
-  {
-    id: "captions",
-    label: "Captions",
-    icon: Icons.captions
-  },
+  ...(ENABLE_CAPTIONS
+    ? [
+        {
+          id: "captions",
+          label: "Captions",
+          icon: Icons.captions
+        }
+      ]
+    : []),
   {
     id: "images",
     label: "Images",
