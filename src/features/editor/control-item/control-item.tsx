@@ -19,7 +19,7 @@ import BasicCaption from "./basic-caption";
 import { LassoSelect } from "lucide-react";
 
 const Container = ({ children }: { children: React.ReactNode }) => {
-  const { activeIds, trackItemsMap, transitionsMap } = useStore();
+  const { activeIds, trackItemsMap } = useStore();
   const [trackItem, setTrackItem] = useState<ITrackItem | null>(null);
   const { setTrackItem: setLayoutTrackItem } = useLayoutStore();
 
@@ -30,7 +30,7 @@ const Container = ({ children }: { children: React.ReactNode }) => {
       if (trackItem) {
         setTrackItem(trackItem);
         setLayoutTrackItem(trackItem);
-      } else console.log(transitionsMap[id]);
+      }
     } else {
       setTrackItem(null);
       setLayoutTrackItem(null);
