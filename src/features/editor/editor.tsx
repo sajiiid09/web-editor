@@ -1,35 +1,38 @@
 "use client";
-import Timeline from "./timeline";
-import useStore from "./store/use-store";
-import Navbar from "./navbar";
-import useTimelineEvents from "./hooks/use-timeline-events";
-import Scene from "./scene";
-import { SceneRef } from "./scene/scene.types";
-import StateManager, { DESIGN_LOAD } from "@designcombo/state";
-import { useEffect, useRef, useState } from "react";
 import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { ImperativePanelHandle } from "react-resizable-panels";
-import { getCompactFontData, loadFonts } from "./utils/fonts";
-import { SECONDARY_FONT, SECONDARY_FONT_URL } from "./constants/constants";
-import MenuList from "./menu-list";
-import { MenuItem } from "./menu-item";
-import { ControlItem } from "./control-item";
-import CropModal from "./crop-modal/crop-modal";
-import useDataState from "./store/use-data-state";
-import { FONTS } from "./data/fonts";
-import FloatingControl from "./control-item/floating-controls/floating-control";
-import { useSceneStore } from "@/store/use-scene-store";
-import { dispatch } from "@designcombo/events";
-import MenuListHorizontal from "./menu-list-horizontal";
 import { useIsLargeScreen } from "@/hooks/use-media-query";
-import { ITrackItem } from "@designcombo/types";
-import useLayoutStore from "./store/use-layout-store";
+import { dispatch } from "@designcombo/events";
+import StateManager, { DESIGN_LOAD } from "@designcombo/state";
+import type { IDesign, ITrackItem } from "@designcombo/types";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ImperativePanelHandle } from "react-resizable-panels";
+import { SECONDARY_FONT, SECONDARY_FONT_URL } from "./constants/constants";
+import { ControlItem } from "./control-item";
 import ControlItemHorizontal from "./control-item-horizontal";
-import { design } from "./mock";
+import FloatingControl from "./control-item/floating-controls/floating-control";
+import CropModal from "./crop-modal/crop-modal";
+import { FONTS } from "./data/fonts";
+import useTimelineEvents from "./hooks/use-timeline-events";
+import { MenuItem } from "./menu-item";
+import MenuList from "./menu-list";
+import MenuListHorizontal from "./menu-list-horizontal";
+import Navbar from "./navbar";
+import {
+	DEFAULT_PROJECT_NAME,
+	projectRepository,
+} from "./projects/project-repository";
+import Scene from "./scene";
+import { SceneRef } from "./scene/scene.types";
+import useDataState from "./store/use-data-state";
+import useLayoutStore from "./store/use-layout-store";
+import useStore from "./store/use-store";
+import Timeline from "./timeline";
+import { getCompactFontData, loadFonts } from "./utils/fonts";
 
 const stateManager = new StateManager({
 	size: {
@@ -38,15 +41,19 @@ const stateManager = new StateManager({
 	},
 });
 
-const Editor = ({ tempId, id }: { tempId?: string; id?: string }) => {
-	const [projectName, setProjectName] = useState<string>("Untitled video");
-	const { scene } = useSceneStore();
+const Editor = ({ id }: { tempId?: string; id?: string }) => {
+	const router = useRouter();
+	const [projectId, setProjectId] = useState<string | null>(id ?? null);
+	const [projectName, setProjectName] = useState<string>(DEFAULT_PROJECT_NAME);
 	const timelinePanelRef = useRef<ImperativePanelHandle>(null);
 	const sceneRef = useRef<SceneRef>(null);
 	const { timeline, playerRef } = useStore();
-	const { activeIds, trackItemsMap, transitionsMap } = useStore();
+	const { activeIds, trackItemsMap } = useStore();
 	const [loaded, setLoaded] = useState(false);
 	const [trackItem, setTrackItem] = useState<ITrackItem | null>(null);
+	const projectIdRef = useRef<string | null>(id ?? null);
+	const autosaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const isLoadingProjectRef = useRef(false);
 	const {
 		setTrackItem: setLayoutTrackItem,
 		setFloatingControl,
@@ -60,8 +67,94 @@ const Editor = ({ tempId, id }: { tempId?: string; id?: string }) => {
 	const { setCompactFonts, setFonts } = useDataState();
 
 	useEffect(() => {
-		dispatch(DESIGN_LOAD, { payload: design });
+		projectIdRef.current = projectId;
+	}, [projectId]);
+
+	const getCurrentDesign = useCallback(
+		(currentProjectId: string): IDesign => ({
+			id: currentProjectId,
+			...stateManager.toJSON(),
+		}),
+		[],
+	);
+
+	const saveCurrentProjectDesign = useCallback(() => {
+		const currentProjectId = projectIdRef.current;
+		if (!currentProjectId || isLoadingProjectRef.current) return;
+
+		projectRepository.updateProject(currentProjectId, {
+			design: getCurrentDesign(currentProjectId),
+		});
+	}, [getCurrentDesign]);
+
+	const scheduleAutosave = useCallback(() => {
+		if (autosaveTimeoutRef.current) {
+			clearTimeout(autosaveTimeoutRef.current);
+		}
+
+		autosaveTimeoutRef.current = setTimeout(saveCurrentProjectDesign, 1500);
+	}, [saveCurrentProjectDesign]);
+
+	const handleProjectNameChange = useCallback((name: string) => {
+		const safeName = name.trim() || DEFAULT_PROJECT_NAME;
+		setProjectName(safeName);
+
+		const currentProjectId = projectIdRef.current;
+		if (!currentProjectId) return;
+
+		projectRepository.updateProject(currentProjectId, { name: safeName });
 	}, []);
+
+	useEffect(() => {
+		isLoadingProjectRef.current = true;
+
+		if (id) {
+			const savedProject = projectRepository.getProject(id);
+
+			if (savedProject) {
+				setProjectId(savedProject.id);
+				projectIdRef.current = savedProject.id;
+				setProjectName(savedProject.name);
+				dispatch(DESIGN_LOAD, { payload: savedProject.design });
+			} else {
+				const newProject = projectRepository.createProject({
+					name: DEFAULT_PROJECT_NAME,
+				});
+				setProjectId(newProject.id);
+				projectIdRef.current = newProject.id;
+				setProjectName(newProject.name);
+				dispatch(DESIGN_LOAD, { payload: newProject.design });
+				router.replace(`/edit/${newProject.id}`);
+			}
+		} else {
+			const newProject = projectRepository.createProject({
+				name: DEFAULT_PROJECT_NAME,
+			});
+			setProjectId(newProject.id);
+			projectIdRef.current = newProject.id;
+			setProjectName(newProject.name);
+			dispatch(DESIGN_LOAD, { payload: newProject.design });
+			router.replace(`/edit/${newProject.id}`);
+		}
+
+		window.setTimeout(() => {
+			isLoadingProjectRef.current = false;
+		}, 0);
+	}, [id, router]);
+
+	useEffect(() => {
+		const stateSubscription = stateManager.subscribe(() => {
+			scheduleAutosave();
+		});
+
+		return () => {
+			stateSubscription.unsubscribe();
+			if (autosaveTimeoutRef.current) {
+				clearTimeout(autosaveTimeoutRef.current);
+			}
+			saveCurrentProjectDesign();
+		};
+	}, [saveCurrentProjectDesign, scheduleAutosave]);
 
 	useEffect(() => {
 		setCompactFonts(getCompactFontData(FONTS));
@@ -117,7 +210,7 @@ const Editor = ({ tempId, id }: { tempId?: string; id?: string }) => {
 			if (trackItem) {
 				setTrackItem(trackItem);
 				setLayoutTrackItem(trackItem);
-			} else console.log(transitionsMap[id]);
+			}
 		} else {
 			setTrackItem(null);
 			setLayoutTrackItem(null);
@@ -140,7 +233,7 @@ const Editor = ({ tempId, id }: { tempId?: string; id?: string }) => {
 				projectName={projectName}
 				user={null}
 				stateManager={stateManager}
-				setProjectName={setProjectName}
+				setProjectName={handleProjectNameChange}
 			/>
 			<div className="flex flex-1">
 				{isLargeScreen && (
