@@ -86,19 +86,19 @@ export default function Navbar({
 				display: "grid",
 				gridTemplateColumns: isLargeScreen ? "320px 1fr 320px" : "1fr 1fr 1fr",
 			}}
-			className="bg-muted pointer-events-none flex h-11 items-center border-b border-border/80 px-2"
+			className="editor-topbar pointer-events-none z-20 flex h-14 items-center border-b border-white/10 px-3"
 		>
 			<DownloadProgressModal />
 
 			<div className="flex items-center gap-2">
-				<div className="pointer-events-auto flex h-11 w-11 items-center justify-center rounded-md text-zinc-200">
+				<div className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-foreground shadow-sm ring-1 ring-white/10">
 					<LogoIcons.scenify />
 				</div>
 
-				<div className=" pointer-events-auto flex h-10 items-center px-1.5">
+				<div className="pointer-events-auto flex h-10 items-center gap-1 rounded-full bg-white/[0.055] px-1.5 ring-1 ring-white/10">
 					<Button
 						onClick={handleUndo}
-						className="text-muted-foreground"
+						className="text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground"
 						variant="ghost"
 						size="icon"
 					>
@@ -106,7 +106,7 @@ export default function Navbar({
 					</Button>
 					<Button
 						onClick={handleRedo}
-						className="text-muted-foreground"
+						className="text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground"
 						variant="ghost"
 						size="icon"
 					>
@@ -117,29 +117,29 @@ export default function Navbar({
 
 			<div className="flex h-11 items-center justify-center gap-2">
 				{!isSmallScreen && (
-					<div className=" pointer-events-auto flex h-10 items-center gap-2 rounded-md px-2.5 text-muted-foreground">
+					<div className="pointer-events-auto flex h-10 items-center gap-2 rounded-full bg-white/[0.055] px-3 text-muted-foreground ring-1 ring-white/10">
 						<AutosizeInput
 							name="title"
 							value={title}
 							onChange={handleTitleChange}
 							width={200}
-							inputClassName="border-none outline-none px-1 bg-background text-sm font-medium text-zinc-200"
+							inputClassName="border-none outline-none px-1 bg-transparent text-center text-[13px] font-semibold tracking-tight text-foreground placeholder:text-muted-foreground"
 						/>
 					</div>
 				)}
 			</div>
 
 			<div className="flex h-11 items-center justify-end gap-2">
-				<div className=" pointer-events-auto flex h-10 items-center gap-2 rounded-md px-2.5">
+				<div className="pointer-events-auto flex h-10 items-center gap-2 rounded-full bg-white/[0.055] px-2.5 ring-1 ring-white/10">
 					<Link href="https://discord.gg/Jmxsd5f2jp" target="_blank">
-						<Button className="h-7 rounded-lg" variant={"outline"}>
+						<Button className="h-8 rounded-full border-white/10 bg-white/[0.035] px-3 text-xs font-medium shadow-sm transition-all hover:-translate-y-0.5 hover:bg-white/10" variant={"outline"}>
 							<LogoIcons.discord className="w-6 h-6" />
 							<span className="hidden md:block">Join Us</span>
 						</Button>
 					</Link>
 					{ENABLE_SHARE && (
 						<Button
-							className="flex h-7 gap-1 border border-border"
+							className="flex h-8 gap-1 rounded-full border-white/10 bg-white/[0.035] px-3 text-xs font-medium shadow-sm transition-all hover:-translate-y-0.5 hover:bg-white/10"
 							variant="outline"
 							size={isMediumScreen ? "sm" : "icon"}
 						>
@@ -184,7 +184,7 @@ const DownloadPopover = ({
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button
-					className="flex h-7 gap-1 border border-border"
+					className="flex h-8 gap-1 rounded-full border-white/10 bg-white/[0.035] px-3 text-xs font-medium shadow-sm transition-all hover:-translate-y-0.5 hover:bg-white/10"
 					size={isMediumScreen ? "sm" : "icon"}
 				>
 					<Download width={18} />{" "}
@@ -193,7 +193,7 @@ const DownloadPopover = ({
 			</PopoverTrigger>
 			<PopoverContent
 				align="end"
-				className="bg-sidebar z-[250] flex w-60 flex-col gap-4"
+				className="bg-background/90 z-[250] flex w-64 flex-col gap-4 border-white/10 shadow-2xl backdrop-blur-xl"
 			>
 				<Label>Export settings</Label>
 
@@ -204,9 +204,9 @@ const DownloadPopover = ({
 							<ChevronDown width={16} />
 						</Button>
 					</PopoverTrigger>
-					<PopoverContent className="bg-background z-[251] w-[--radix-popover-trigger-width] px-2 py-2">
+					<PopoverContent className="bg-background/90 z-[251] w-[--radix-popover-trigger-width] border-white/10 px-2 py-2 shadow-2xl backdrop-blur-xl">
 						<div
-							className="flex h-7 items-center rounded-sm px-3 text-sm hover:cursor-pointer hover:bg-zinc-800"
+							className="flex h-8 items-center rounded-lg px-3 text-sm transition-colors hover:cursor-pointer hover:bg-white/10"
 							onClick={() => {
 								actions.setExportType("mp4");
 								setIsExportTypeOpen(false);
@@ -215,7 +215,7 @@ const DownloadPopover = ({
 							MP4
 						</div>
 						<div
-							className="flex h-7 items-center rounded-sm px-3 text-sm hover:cursor-pointer hover:bg-zinc-800"
+							className="flex h-8 items-center rounded-lg px-3 text-sm transition-colors hover:cursor-pointer hover:bg-white/10"
 							onClick={() => {
 								actions.setExportType("json");
 								setIsExportTypeOpen(false);
@@ -293,12 +293,12 @@ const ResizeVideo = () => {
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
-				<Button className="z-10 h-7 gap-2" variant="outline" size={"sm"}>
+				<Button className="z-10 h-8 gap-2 rounded-full border-white/10 bg-white/[0.035] px-3 text-xs font-medium shadow-sm transition-all hover:-translate-y-0.5 hover:bg-white/10" variant="outline" size={"sm"}>
 					<ProportionsIcon className="h-4 w-4" />
 					<div>Resize</div>
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="z-[250] w-60 px-2.5 py-3">
+			<PopoverContent className="z-[250] w-64 border-white/10 bg-background/90 px-2.5 py-3 shadow-2xl backdrop-blur-xl">
 				<div className="text-sm">
 					{RESIZE_OPTIONS.map((option, index) => (
 						<ResizeOption

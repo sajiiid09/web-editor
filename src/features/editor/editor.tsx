@@ -228,24 +228,30 @@ const Editor = ({ id }: { tempId?: string; id?: string }) => {
 	}, []);
 
 	return (
-		<div className="flex h-screen w-screen flex-col">
+		<div className="editor-shell flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground antialiased">
 			<Navbar
 				projectName={projectName}
 				user={null}
 				stateManager={stateManager}
 				setProjectName={handleProjectNameChange}
 			/>
-			<div className="flex flex-1">
+			<div className="min-h-0 flex flex-1 p-2 pt-0">
 				{isLargeScreen && (
-					<div className="bg-muted  flex flex-none border-r border-border/80 h-[calc(100vh-44px)]">
+					<div className="editor-glass-panel editor-left-sidebar flex h-full flex-none overflow-hidden">
 						<MenuList />
 						<MenuItem />
 					</div>
 				)}
-				<ResizablePanelGroup style={{ flex: 1 }} direction="vertical">
-					<ResizablePanel className="relative" defaultSize={70}>
+				<ResizablePanelGroup
+					className="min-w-0 flex-1 overflow-hidden rounded-[24px] border border-white/10 bg-background/35 shadow-[0_18px_50px_rgba(0,0,0,0.24)]"
+					direction="vertical"
+				>
+					<ResizablePanel
+						className="relative overflow-hidden bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.08),transparent_35%),linear-gradient(180deg,rgba(255,255,255,0.035),rgba(0,0,0,0.08))]"
+						defaultSize={70}
+					>
 						<FloatingControl />
-						<div className="flex h-full flex-1">
+						<div className="flex h-full flex-1 p-4 lg:p-6">
 							{/* Sidebar only on large screens - conditionally mounted */}
 
 							<div
@@ -255,6 +261,7 @@ const Editor = ({ id }: { tempId?: string; id?: string }) => {
 									position: "relative",
 									flex: 1,
 									overflow: "hidden",
+									borderRadius: "22px",
 								}}
 							>
 								<CropModal />
@@ -262,9 +269,9 @@ const Editor = ({ id }: { tempId?: string; id?: string }) => {
 							</div>
 						</div>
 					</ResizablePanel>
-					<ResizableHandle />
+					<ResizableHandle className="bg-white/5 transition-colors hover:bg-primary/40" />
 					<ResizablePanel
-						className="min-h-[50px]"
+						className="editor-timeline-shell min-h-[50px]"
 						ref={timelinePanelRef}
 						defaultSize={30}
 						onResize={handleTimelineResize}
