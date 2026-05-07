@@ -140,8 +140,8 @@ const Timeline = ({ stateManager }: { stateManager: StateManager }) => {
         width: containerWidth,
         height: 0
       },
-      selectionColor: "rgba(0, 216, 214,0.1)",
-      selectionBorderColor: "rgba(0, 216, 214,1.0)",
+      selectionColor: "rgba(45, 212, 191, 0.16)",
+      selectionBorderColor: "rgba(94, 234, 212, 0.95)",
       onScroll,
       onResizeCanvas,
       scale: scale,
@@ -152,15 +152,15 @@ const Timeline = ({ stateManager }: { stateManager: StateManager }) => {
         right: TIMELINE_OFFSET_CANVAS_RIGHT
       },
       sizesMap: {
-        caption: 32,
-        text: 32,
-        audio: 36,
-        customTrack: 40,
-        customTrack2: 40,
-        linealAudioBars: 40,
-        radialAudioBars: 40,
-        waveAudioBars: 40,
-        hillAudioBars: 40
+        caption: 36,
+        text: 36,
+        audio: 40,
+        customTrack: 44,
+        customTrack2: 44,
+        linealAudioBars: 44,
+        radialAudioBars: 44,
+        waveAudioBars: 44,
+        hillAudioBars: 44
       },
       itemTypes: [
         "text",
@@ -194,7 +194,7 @@ const Timeline = ({ stateManager }: { stateManager: StateManager }) => {
         waveAudioBars: ["audio", "waveAudioBars"],
         hillAudioBars: ["audio", "hillAudioBars"]
       },
-      guideLineColor: "#ffffff"
+      guideLineColor: "rgba(255, 255, 255, 0.72)"
     });
 
     canvasRef.current = canvas;
@@ -304,7 +304,7 @@ const Timeline = ({ stateManager }: { stateManager: StateManager }) => {
     <div
       ref={timelineContainerRef}
       id={"timeline-container"}
-      className="bg-muted relative h-full w-full overflow-hidden"
+      className="editor-timeline relative h-full w-full overflow-hidden"
     >
       <Header />
       <Ruler
@@ -313,7 +313,7 @@ const Timeline = ({ stateManager }: { stateManager: StateManager }) => {
         onScroll={onRulerScroll}
       />
       <Playhead scrollLeft={scrollLeft} />
-      <div className="flex">
+      <div className="editor-timeline-lanes flex">
         <div
           style={{
             width: timelineOffsetX
@@ -335,7 +335,7 @@ const Timeline = ({ stateManager }: { stateManager: StateManager }) => {
               width: "calc(100vw - 40px)",
               height: "10px"
             }}
-            className="ScrollAreaRootH"
+            className="ScrollAreaRootH editor-timeline-scrollbar"
             onPointerDown={() => {
               canScrollRef.current = true;
             }}

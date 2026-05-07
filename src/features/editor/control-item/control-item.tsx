@@ -19,7 +19,7 @@ import BasicCaption from "./basic-caption";
 import { LassoSelect } from "lucide-react";
 
 const Container = ({ children }: { children: React.ReactNode }) => {
-  const { activeIds, trackItemsMap, transitionsMap } = useStore();
+  const { activeIds, trackItemsMap } = useStore();
   const [trackItem, setTrackItem] = useState<ITrackItem | null>(null);
   const { setTrackItem: setLayoutTrackItem } = useLayoutStore();
 
@@ -30,7 +30,7 @@ const Container = ({ children }: { children: React.ReactNode }) => {
       if (trackItem) {
         setTrackItem(trackItem);
         setLayoutTrackItem(trackItem);
-      } else console.log(transitionsMap[id]);
+      }
     } else {
       setTrackItem(null);
       setLayoutTrackItem(null);
@@ -38,7 +38,7 @@ const Container = ({ children }: { children: React.ReactNode }) => {
   }, [activeIds, trackItemsMap]);
 
   return (
-    <div className="flex w-[272px] flex-none border-l border-border/80 bg-muted hidden lg:block">
+    <div className="editor-glass-panel editor-inspector ml-2 hidden w-[300px] flex-none overflow-hidden lg:block">
       {React.cloneElement(children as React.ReactElement<any>, {
         trackItem
       })}
@@ -55,7 +55,7 @@ const ActiveControlItem = ({
     return (
       <div className="pb-32 flex flex-1 flex-col items-center justify-center gap-4 text-muted-foreground h-[calc(100vh-58px)]">
         <LassoSelect />
-        <span className="text-zinc-500">No item selected</span>
+        <span className="text-sm font-medium text-muted-foreground">Select a clip to edit</span>
       </div>
     );
   }

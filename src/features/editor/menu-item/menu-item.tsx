@@ -7,7 +7,7 @@ const ActiveMenuItem = () => {
 
   const activeItem = MENU_ITEMS.find((item) => item.id === activeMenuItem);
 
-  if (activeItem && activeItem.component) {
+  if (activeItem?.component) {
     const Component = activeItem.component;
     return <Component />;
   }
@@ -19,7 +19,7 @@ export const MenuItem = () => {
   const isLargeScreen = useIsLargeScreen();
 
   return (
-    <div className={`${isLargeScreen ? "w-[300px]" : "w-full"} flex-1 flex`}>
+    <div className={`${isLargeScreen ? "w-[312px]" : "w-full"} editor-library-panel flex-1 flex`}>
       <ActiveMenuItem />
     </div>
   );

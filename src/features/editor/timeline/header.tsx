@@ -139,14 +139,14 @@ const Header = () => {
     <div
       style={{
         position: "relative",
-        height: "50px",
+        height: "56px",
         flex: "none"
       }}
     >
       <div
         style={{
           position: "absolute",
-          height: 50,
+          height: 56,
           width: "100%",
           display: "flex",
           alignItems: "center"
@@ -154,7 +154,7 @@ const Header = () => {
       >
         <div
           style={{
-            height: 36,
+            height: 40,
             width: "100%",
             display: "grid",
             gridTemplateColumns: isLargeScreen
@@ -163,13 +163,13 @@ const Header = () => {
             alignItems: "center"
           }}
         >
-          <div className="flex px-2">
+          <div className="flex items-center gap-1 px-3">
             <Button
               disabled={!activeIds.length}
               onClick={doActiveDelete}
               variant={"ghost"}
               size={isLargeScreen ? "sm" : "icon"}
-              className="flex items-center gap-1 px-2"
+              className="h-8 items-center gap-1 rounded-full px-3 text-xs font-medium transition-all hover:-translate-y-0.5 hover:bg-white/10 disabled:opacity-35"
             >
               <Trash size={14} />{" "}
               <span className="hidden lg:block">Delete</span>
@@ -180,7 +180,7 @@ const Header = () => {
               onClick={doActiveSplit}
               variant={"ghost"}
               size={isLargeScreen ? "sm" : "icon"}
-              className="flex items-center gap-1 px-2"
+              className="h-8 items-center gap-1 rounded-full px-3 text-xs font-medium transition-all hover:-translate-y-0.5 hover:bg-white/10 disabled:opacity-35"
             >
               <SquareSplitHorizontal size={15} />{" "}
               <span className="hidden lg:block">Split</span>
@@ -192,7 +192,7 @@ const Header = () => {
               }}
               variant={"ghost"}
               size={isLargeScreen ? "sm" : "icon"}
-              className="flex items-center gap-1 px-2"
+              className="h-8 items-center gap-1 rounded-full px-3 text-xs font-medium transition-all hover:-translate-y-0.5 hover:bg-white/10 disabled:opacity-35"
             >
               <SquareSplitHorizontal size={15} />{" "}
               <span className="hidden lg:block">Clone</span>
@@ -201,7 +201,7 @@ const Header = () => {
           <div className="flex items-center justify-center">
             <div>
               <Button
-                className="hidden lg:inline-flex"
+                className="hidden rounded-full text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground lg:inline-flex"
                 onClick={doActiveDelete}
                 variant={"ghost"}
                 size={"icon"}
@@ -217,6 +217,7 @@ const Header = () => {
                 }}
                 variant={"ghost"}
                 size={"icon"}
+                className="rounded-full bg-white/10 text-foreground shadow-sm ring-1 ring-white/10 transition-transform hover:scale-105 hover:bg-white/15"
               >
                 {playing ? (
                   <IconPlayerPauseFilled size={14} />
@@ -225,7 +226,7 @@ const Header = () => {
                 )}
               </Button>
               <Button
-                className="hidden lg:inline-flex"
+                className="hidden rounded-full text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground lg:inline-flex"
                 onClick={doActiveSplit}
                 variant={"ghost"}
                 size={"icon"}
@@ -234,7 +235,7 @@ const Header = () => {
               </Button>
             </div>
             <div
-              className="text-xs font-light flex"
+              className="ml-2 flex rounded-full bg-white/[0.045] px-3 py-1 text-xs font-light ring-1 ring-white/10"
               style={{
                 alignItems: "center",
                 gridTemplateColumns: "54px 4px 54px",
@@ -243,7 +244,7 @@ const Header = () => {
               }}
             >
               <div
-                className="font-medium text-zinc-200"
+                className="font-semibold tabular-nums text-foreground"
                 style={{
                   display: "flex",
                   justifyContent: "center"
@@ -253,9 +254,9 @@ const Header = () => {
               >
                 {frameToTimeString({ frame: currentFrame }, { fps })}
               </div>
-              <span className="px-1">|</span>
+              <span className="px-1.5 text-muted-foreground/60">/</span>
               <div
-                className="text-muted-foreground hidden lg:block"
+                className="hidden tabular-nums text-muted-foreground lg:block"
                 style={{
                   display: "flex",
                   justifyContent: "center"
@@ -309,13 +310,13 @@ const ZoomControl = ({
   };
 
   return (
-    <div className="flex items-center justify-end">
-      <div className="flex lg:border-l pl-4 pr-2">
-        <Button size={"icon"} variant={"ghost"} onClick={onZoomOutClick}>
+    <div className="flex items-center justify-end px-3">
+      <div className="flex items-center gap-1 rounded-full bg-white/[0.045] px-2 py-1 ring-1 ring-white/10">
+        <Button className="rounded-full text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground" size={"icon"} variant={"ghost"} onClick={onZoomOutClick}>
           <ZoomOut size={16} />
         </Button>
         <Slider
-          className="w-28 hidden lg:flex"
+          className="hidden w-28 lg:flex"
           value={[localValue]}
           min={0}
           max={12}
@@ -328,10 +329,10 @@ const ZoomControl = ({
             onChangeTimelineScale(zoom); // Propagate value to parent when user commits change
           }}
         />
-        <Button size={"icon"} variant={"ghost"} onClick={onZoomInClick}>
+        <Button className="rounded-full text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground" size={"icon"} variant={"ghost"} onClick={onZoomInClick}>
           <ZoomIn size={16} />
         </Button>
-        <Button onClick={onZoomFitClick} variant={"ghost"} size={"icon"}>
+        <Button className="rounded-full text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground" onClick={onZoomFitClick} variant={"ghost"} size={"icon"}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"

@@ -28,9 +28,9 @@ const MenuButton = memo<{
     <Button
       onClick={handleClick}
       className={cn(
-        "transition-colors duration-200 hover:bg-secondary/80",
+        "editor-sidebar-button relative h-10 w-10 rounded-2xl transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-sm",
         isActive
-          ? "bg-secondary text-secondary-foreground"
+          ? "bg-white/15 text-foreground shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_10px_25px_rgba(0,0,0,0.18)]"
           : "text-muted-foreground hover:text-foreground"
       )}
       variant="ghost"
@@ -81,7 +81,7 @@ function MenuList() {
   return (
     <>
       <nav
-        className="flex w-14 flex-col items-center gap-1 border-r border-border/80 py-2"
+        className="flex w-16 flex-col items-center gap-2 border-r border-white/10 bg-white/[0.025] px-2 py-3"
         role="toolbar"
         aria-label="Editor tools"
       >
@@ -104,7 +104,7 @@ function MenuList() {
       {/* Drawer only on mobile/tablet - conditionally mounted */}
       {!isLargeScreen && (
         <Drawer open={drawerOpen} onOpenChange={handleDrawerOpenChange}>
-          <DrawerContent className="max-h-[80vh]">
+          <DrawerContent className="max-h-[80vh] border-white/10 bg-background/90 backdrop-blur-xl">
             <DrawerHeader>
               <DrawerTitle className="capitalize">{activeMenuItem}</DrawerTitle>
             </DrawerHeader>
